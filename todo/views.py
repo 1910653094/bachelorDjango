@@ -68,23 +68,29 @@ def index(request, user_id):
 def updateTask(request, pk):
     task = Task.objects.get(id=pk)
     form = TaskForm(instance=task)
+    print(request)
 
     if request.method == 'POST':
         form = TaskForm(request.POST, instance=task)
         if form.is_valid():
             form.save()
             return redirect('/')
+        else:
+            print(form)
 
-    context = {'form': form}
+    context = {'form': form, 'user_id': task.user_id}
     return render(request, 'update_task.html', context)
 
 
 def deleteTask(request, pk):
-    item = Task.objects.get(id=pk)
+    task = Task.objects.get(id=pk)
+    # item = Task.objects.get(id=pk)
+    print(task.user_id)
 
     if request.method == 'POST':
-        item.delete()
+        # item.delete()
+        task.delete()
         return redirect('/')
 
-    context = {'item': item}
+    context = {'item': task, 'user_id': task.user_id}
     return render(request, 'delete.html', context)

@@ -3,7 +3,9 @@
 <form method="POST">
 	{% csrf_token %}
 
-	{{form}}
+	{{ form.title }}
+    {{ form.complete }}
+    <input type="hidden" name="user_id" value="{{ user_id }}">
 	<input type="submit" name="Update Task">
 
 
