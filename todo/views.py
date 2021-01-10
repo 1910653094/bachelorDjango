@@ -1,5 +1,3 @@
-from django.contrib import messages
-from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 
 from todo.forms import *
@@ -25,7 +23,6 @@ def registration(request):
             else:
                 fm.save()
                 user_id = User.objects.latest('id')
-                print(user_id)
                 return redirect(index, user_id)
 
         elif fm.is_valid():
@@ -68,15 +65,12 @@ def index(request, user_id):
 def updateTask(request, pk):
     task = Task.objects.get(id=pk)
     form = TaskForm(instance=task)
-    print(request)
 
     if request.method == 'POST':
         form = TaskForm(request.POST, instance=task)
         if form.is_valid():
             form.save()
-            return redirect('/')
-        else:
-            print(form)
+            return redirect(index, task.user_id)
 
     context = {'form': form, 'user_id': task.user_id}
     return render(request, 'update_task.html', context)
@@ -84,13 +78,10 @@ def updateTask(request, pk):
 
 def deleteTask(request, pk):
     task = Task.objects.get(id=pk)
-    # item = Task.objects.get(id=pk)
-    print(task.user_id)
 
     if request.method == 'POST':
-        # item.delete()
         task.delete()
-        return redirect('/')
+        return redirect(index, task.user_id)
 
     context = {'item': task, 'user_id': task.user_id}
     return render(request, 'delete.html', context)
