@@ -11,14 +11,9 @@ def registration(request):
     if request.method == 'POST':
         fm = UserForm(request.POST)
         if fm.is_valid() and 'register' in request.POST:
-            users = User.objects.all()
-            exists = False
-            for user in users:
-                if user.username == request.POST['username']:
-                    exists = True
-                    break
+            users = User.objects.filter(username=request.POST['username'])
 
-            if exists:
+            if users:
                 error = 'Username already exists'
             else:
                 fm.save()
